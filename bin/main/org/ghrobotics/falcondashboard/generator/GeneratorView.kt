@@ -37,6 +37,7 @@ import org.ghrobotics.lib.mathematics.twodim.trajectory.optimization.PathFinder
 import org.ghrobotics.lib.mathematics.units.derived.acceleration
 import org.ghrobotics.lib.mathematics.units.derived.velocity
 import org.ghrobotics.lib.mathematics.units.feet
+import org.ghrobotics.lib.mathematics.units.meters
 import tornadofx.*
 
 class GeneratorView : View() {
@@ -165,8 +166,8 @@ class GeneratorView : View() {
 
     companion object {
         val waypoints = observableListOf(
-            Pose2d(1.5.feet, 23.feet, Rotation2d()),
-            Pose2d(11.5.feet, 23.feet, Rotation2d())
+            Pose2d(1.0.meters, 1.0.meters, Rotation2d()),
+            Pose2d(2.0.meters, 2.0.meters, Rotation2d())
         )
 
         private val config: TrajectoryConfig =

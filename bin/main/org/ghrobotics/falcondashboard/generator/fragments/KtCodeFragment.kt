@@ -9,7 +9,8 @@ import org.ghrobotics.lib.mathematics.twodim.geometry.x_u
 import org.ghrobotics.lib.mathematics.twodim.geometry.y_u
 import org.ghrobotics.lib.mathematics.units.feet
 import org.ghrobotics.lib.mathematics.units.inFeet
-import org.ghrobotics.lib.mathematics.units.meter
+import org.ghrobotics.lib.mathematics.units.meters
+import org.ghrobotics.lib.mathematics.units.inMeters
 import tornadofx.*
 import java.awt.Desktop
 import java.net.URI
@@ -51,12 +52,12 @@ class KtCodeFragment : Fragment() {
                 val dm = DecimalFormat("##.###")
 
 //                append("val $name = DefaultTrajectoryGenerator.generateTrajectory(\n")
-                append("wayPoints = listOf(\n")
+                append("List.of(\n")
                 GeneratorView.waypoints.forEach {
                     append(
-                        "    Pose2d(${dm.format(it.translation.x_u.inFeet())}.feet, " +
-                                "${dm.format(it.translation.y_u.inFeet())}.feet, " +
-                                "${dm.format(it.rotation.degrees)}.degrees)"
+                        "    new Pose2d(${dm.format(it.translation.x_u.inMeters())}, " +
+                                "${dm.format(it.translation.y_u.inMeters())}, " +
+                                "new Rotation2d(${dm.format(it.rotation.radians)}))"
                     )
                     if (it != GeneratorView.waypoints.last()) append(",")
                     append("\n")
