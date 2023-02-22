@@ -27,7 +27,7 @@ class CodeFragment : Fragment() {
 
             vgrow = Priority.ALWAYS
 
-            text = TrajectoryUtil.serializeTrajectory(GeneratorView.trajectory.getValue())
+            text = TrajectoryUtil.serializeTrajectory(GeneratorView.trajectory.value)
         }
         vbox {
             style {
