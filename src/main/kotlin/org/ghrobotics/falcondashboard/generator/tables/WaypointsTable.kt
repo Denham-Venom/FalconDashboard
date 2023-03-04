@@ -141,31 +141,31 @@ object WaypointsTable : TableView<Pose2d>(GeneratorView.waypoints) {
             var trim = it
                 .replace(" ", "")
                 .let { it2 -> if(it2.last() == ',') it2.substring(0, it2.length - 1) else it2 }
-                .let { it2 -> if(!it2.startsWith("Pose2d", true)) null else it2 } ?: return@map null
+                .let { it2 -> if(!it2.startsWith("new SwerveTrajectoryWaypoint", true)) null else it2 } ?: return@map null
 
             // so at this point all of our text starts with Pose2d and ends with a closing paren.
             // start by removing the starting and closing parenthesis
 
-            trim = trim.substring(7, trim.length- 1)
-            val x = trim.substring(0, trim.indexOf(".feet"))
+            trim = trim.substring(29, trim.length- 1) // take out "new SwerveTrajectoryWaypoint("
+            val x = trim.substring(0, trim.indexOf(","))
                 .let { it2 ->
                     if(it2.startsWith("(") || it2.endsWith(")")) {
                         return@let it2.substring(1, it2.length - 1)
                     } else it2
                 }
                 .toDouble()
-            val trimNoX = trim.substring(trim.indexOf(".feet") + 6, trim.length)
-            val y = trimNoX.substring(0, trimNoX.indexOf(".feet"))
+            val trimNoX = trim.substring(trim.indexOf(",") + 1, trim.length)
+            val y = trimNoX.substring(0, trimNoX.indexOf(","))
                 .let { it2 ->
                     if(it2.startsWith("(") || it2.endsWith(")")) {
                         return@let it2.substring(1, it2.length - 1)
                     } else it2
                 }
                 .toDouble()
-            val trimNoY = trimNoX.substring(trimNoX.indexOf(".feet") + 6, trimNoX.length)
-            val theta: Double = trimNoY.let { noY ->
-                val index: Int = noY.indexOf(".degrees").let { ret ->
-                    if(ret < 0) noY.indexOf(".degree") else ret
+            val trimNoY = trimNoX.substring(trimNoX.indexOf(",") + 1, trimNoX.length)
+            val orientation: Double = trimNoY.let { noY ->
+                val index: Int = noY.indexOf(",").let { ret ->
+                    if(ret < 0) noY.indexOf(",") else ret
                 }
                 val numberWithMaybeParens = noY.substring(0, index)
                 if(numberWithMaybeParens.startsWith("(") || numberWithMaybeParens.endsWith(")")) {
@@ -173,7 +173,18 @@ object WaypointsTable : TableView<Pose2d>(GeneratorView.waypoints) {
                 }
                 return@let numberWithMaybeParens.toDouble()
             }
-            val pose = Pose2d(x.meters, y.meters, theta.radians)
+            val trimNoOrientation = trimNoY.substring(trimNoY.indexOf(",") + 1, trimNoY.length)
+            val heading: Double = trimNoOrientation.let { noOrientation ->
+                val index: Int = noOrientation.indexOf(")").let { ret ->
+                    if(ret < 0) noOrientation.indexOf(")") else ret
+                }
+                val numberWithMaybeParens = noOrientation.substring(0, index)
+                if(numberWithMaybeParens.startsWith("(") || numberWithMaybeParens.endsWith(")")) {
+                    return@let numberWithMaybeParens.substring(1, numberWithMaybeParens.length - 1).toDouble()
+                }
+                return@let numberWithMaybeParens.toDouble()
+            }
+            val pose = Pose2d(x.meters, y.meters, heading.radians)
             pose
         }
         GeneratorView.waypoints.setAll(poses.filterNotNull())

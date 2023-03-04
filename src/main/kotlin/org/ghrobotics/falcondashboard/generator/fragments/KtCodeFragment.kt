@@ -51,18 +51,17 @@ class KtCodeFragment : Fragment() {
 
                 val dm = DecimalFormat("##.###")
 
-//                append("val $name = DefaultTrajectoryGenerator.generateTrajectory(\n")
-                append("List.of(\n")
+                append("public static final SwerveTrajectoryWaypoint[] $name = {\n")
                 GeneratorView.waypoints.forEach {
                     append(
-                        "    new Pose2d(${dm.format(it.translation.x_u.inMeters())}, " +
+                        "    new SwerveTrajectoryWaypoint(${dm.format(it.translation.x_u.inMeters())}, " +
                                 "${dm.format(it.translation.y_u.inMeters())}, " +
-                                "new Rotation2d(${dm.format(it.rotation.radians)}))"
+                                "${dm.format(it.rotation.radians)})"
                     )
                     if (it != GeneratorView.waypoints.last()) append(",")
                     append("\n")
                 }
-                append("),\n")
+                append("};\n")
 //                append(
 //                    "    constraints = listOf(CentripetalAccelerationConstraint(${Settings.maxCentripetalAcceleration.value}.feet.acceleration),\n" +
 //                            "    startVelocity = 0.0.feet.velocity,\n" +
